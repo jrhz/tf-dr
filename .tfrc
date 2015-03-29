@@ -1,6 +1,3 @@
-;;; jrh@zeppelin.net's .tfrc
-;;; Last Modified - Time-stamp: <10/24/03 01:50 /home/jrh/.tfrc jrh>
-
 /def HOOKFILE = ~/.tinyf/hook.tf
 /def WORLDFILE = ~/.tinyf/world.tf
 /loadworld
@@ -38,7 +35,7 @@
 /set container=pack
 
 ;;; People to highlight
-/def -F -p90 -PhCcyan -mregexp -t'[Oo]lwydd'
+/def -F -p90 -PhCcyan -mregexp -t'[Bb]uddyboy'
 
 ;;; Key bindings
 /unbind ^k
