@@ -6,6 +6,8 @@ need to edit the hook.tf and look for USERNAME PASSWORD and CHARACTER
 and just change those to what you think is right. I've found all lower
 case always works, so I don't stray from that. 
 
+![Image of DR on TF](https://github.com/jrhz/tf-dr/blob/master/boring-tf.png)
+
 - *colorful.tf*: Some highlights and examples. Should go in ~/.tinyf/
 - *hook.tf*: The hooks for calling the DRlogin script. Should go in ~/.tinyf/
 - *world.tf*: This works in concert with the hooks. Should go in ~/.tinyf/
