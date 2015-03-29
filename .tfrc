@@ -1,0 +1,162 @@
+;;; jrh@zeppelin.net's .tfrc
+;;; Last Modified - Time-stamp: <10/24/03 01:50 /home/jrh/.tfrc jrh>
+
+/def HOOKFILE = ~/.tinyf/hook.tf
+/def WORLDFILE = ~/.tinyf/world.tf
+/loadworld
+/loadhook
+/cd ~/.tinyf
+/load colorful.tf
+
+;;; Top level stuff.
+/require grep.tf
+/require kbregion.tf
+/require complete.tf
+/require tools.tf
+/visual on
+/isize 1
+/set emulation=ansi_attr
+/quiet off
+/complete
+/beep off
+/set TINYDIR ~/.tinyf
+/set RT=RT: 0
+/set wrapspace=0
+/xtitle DragonRealms
+
+;; There's got to be a better way to do this...
+/def -h"PROMPT *>" catch_prompt=/set uselessvalue={*}
+
+/set sword=scimitar
+/set blade=sabre
+/set bow=forest bow
+/set heavyblade=bastard sword
+/set blunt=mace
+/set crossbow=crossbow
+/set armor=leathers
+/set shield=buckler
+/set container=pack
+
+;;; People to highlight
+/def -F -p90 -PhCcyan -mregexp -t'[Oo]lwydd'
+
+;;; Key bindings
+/unbind ^k
+/unbind ^w
+/unbind ^x^x
+/unbind ^[[A
+/unbind ^[[B
+/unbind ^[OA
+/unbind ^[OB
+
+/bind ^[[A = /dokey RECALLB
+/bind ^[[B = /dokey RECALLF
+/bind ^[OA = /dokey RECALLB
+/bind ^[OB = /dokey RECALLF
+
+/bind ^[Ow = nw
+/bind ^[Ox = n
+/bind ^[Oy = ne
+/bind ^[Ot = w
+/bind ^[Ou = out
+/bind ^[Ou = e
+/bind ^[Oq = sw
+/bind ^[Or = s
+/bind ^[Os = se
+
+/bind ^[[6~ = /dokey page
+/bind ^k        = /kb_cut_to_eol
+/bind ^@        = /kb_set_mark
+/bind ^\32      = /kb_set_mark
+/bind ^w        = /kb_cut_region
+/bind ^[w       = /kb_copy_region
+/bind ^y        = /kb_paste_buffer
+/bind ^x^x      = /kb_exchange_point_and_mark
+
+/bind ^I=/complete
+/bind ^[OR=exp
+
+;;; Counter
+
+;; Alternate counter.
+;;/def -p10 -aCyellow -mregexp -t'^^[>]*[\[\(]*[Rr]oundtime[^0-9]*([0-9]+)[^0-9]*.*$' hilite_roundtime = /set RTgoing=1%;/repeat -%P1 1 /trigger *** RT OVER ***
+;;/def -p10 -aCyellow -mglob -t'*** RT OVER ***' hilite_rtover = /set RTgoing=0%;/test echo("\012\012          *** RT is done ***\012\012", B)
+
+/def -p100 -mregexp -aBCyellow -mregexp -t'^[>]*[\[]*[Rr]ound[ ]*time[^0-9]*([0-9]+)[^0-0]*.*$'=/set X=%P1%;/doDec
+
+/def -E'$[X] > 0' doDec = /repeat -w -00:00:01 $[X] /updateRT
+/def -E'$[X >= 0]' updateRT=/set X=$[--X]%;/set RT=RT: $[X]
+
+/def ds=draw my %{sword} 
+/def ss=sheath my %{sword}
+
+/def sd=sheath my %{blade}
+/def dd=draw my %{blade}
+
+/def gk=get my skinning knife
+/def pk=put my knife in my boot
+
+/def db=draw my %{heavyblade}
+/def sb=sheath my %{heavyblade}
+
+/def dn=draw nightstick
+/def sn=sheath nightstick
+
+/def dm=draw my %{blunt}
+/def sm=sheath my %{blunt}
+
+/def dk=draw katar
+/def sk=sheath katar
+
+/def hl=hold my %{longbow}
+/def wl=wear my %{longbow}
+/def ll=load my %{longbow}
+
+/def hb=hold my %{bow}
+/def lb=load my %{bow}
+/def wb=wear my %{bow}
+
+/def hc=hold my %{crossbow}
+/def wc=wear my %{crossbow}
+/def lc=load my %{crossbow}
+
+/def ga=get arrow
+/def pa=put arrow in my quiver
+/def gs=get my scraper
+/def pb=put my scraper in my boot
+
+/def ws=wear %{shield}
+/def hs=hold %{shield}
+
+/def gem=get %{1}%;put %{1} in my gem pouch
+/def box=get %{1}%;put %{1} in my %{container}
+/def fill=fill my gem pouch with my %{1}
+
+;;; Taken from Adam Dray
+;;; Define a macro to cut from the cursor position to the end of line
+
+/def -i kb_cut_to_eol = \
+    /set _kb_mark=$[kbpoint()]%;\
+    /dokey_end%;\
+    /if ( _kb_mark > -1 ) \
+        /let mark=%{_kb_mark}%;\
+        /set _kb_region=%;\
+        /if ( _kb_mark > kbpoint() ) \
+            /test _kb_region := substr(kbtail(), 0, kbpoint() - _kb_mark)%;\
+        /else \
+            /test _kb_region := substr(kbhead(), _kb_mark, kbpoint())%;\
+        /endif%;\
+        /set _kb_mark=-1%;\
+        /test kbdel(mark)%;\
+    /endif
+
+/set status_fields=RT:6 @more:8:Br :1 @world :1 @read:6 :1 @active:11 :1 @log:5 :1 @mail:6 :1 insert:6 :1 @clock:5
+
+/test tf_start_time := (tf_start_time | time())
+
+/def tf_time =\
+    /let seconds=$[time() - tf_start_time]%;\
+    /echo % Your tf has been running for \
+        $[seconds/86400] days $[mod(seconds/3600,24)] hours \
+        $[mod(seconds/60,60)] mins $[mod(seconds,60)] secs.
+
